@@ -60,21 +60,7 @@ export function bindModeButtons(onChange) {
   });
 }
 
-// ── Heatmap toggle ─────────────────────────────────────────────
 
-/**
- * Attach change listener to the heatmap toggle.
- * @param {(enabled: boolean) => void} onChange
- */
-export function bindHeatmapToggle(onChange) {
-  const toggle = document.getElementById('heatmapToggle');
-  const legend = document.getElementById('heatmapLegend');
-  toggle.addEventListener('change', (e) => {
-    const enabled = e.target.checked;
-    legend.style.display = enabled ? 'block' : 'none';
-    onChange(enabled);
-  });
-}
 
 // ── Location info ──────────────────────────────────────────────
 

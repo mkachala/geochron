@@ -70,68 +70,20 @@ export function getMarkerLatLng() {
 // ── Isochrones ─────────────────────────────────────────────────
 
 /**
- * Render isochrone feature set as Leaflet polygons or heatmap.
+ * Render isochrone feature set as Leaflet polygons.
  * @param {Array<{time: number, geometry: GeoJSON.Geometry}>} features
  * @param {string} mode - Current transport mode (for tooltip label).
  * @param {number[]} currentTimes - Active contour values.
- * @param {boolean} isHeatmapMode - Whether to render as a speed distortion heatmap.
  */
-export function renderIsochrones(features, mode, currentTimes, isHeatmapMode = false) {
+export function renderIsochrones(features, mode, currentTimes) {
   isochroneGroup.clearLayers();
 
   const center = getMarkerLatLng();
   if (!center) return;
 
-  if (isHeatmapMode) {
-    renderHeatmapPolylines(features, mode, center);
-  } else {
-    renderIsochronePolygons(features, mode, currentTimes);
-  }
+  renderIsochronePolygons(features, mode, currentTimes);
 }
 
-/**
- * Render heatmap segmented polylines.
- * @param {Array<{time: number, geometry: GeoJSON.Geometry}>} features
- * @param {string} mode 
- * @param {{lat: number, lng: number}} center 
- */
-function renderHeatmapPolylines(features, mode, center) {
-  features.forEach((feat) => {
-    const timeHours = feat.time / 60;
-    const coords = feat.geometry.coordinates[0];
-    
-    for (let i = 0; i < coords.length - 1; i++) {
-      const c1 = coords[i];
-      const c2 = coords[i+1];
-      
-      const midLon = (c1[0] + c2[0]) / 2;
-      const midLat = (c1[1] + c2[1]) / 2;
-      const distKm = calculateDistance(center.lat, center.lng, midLat, midLon);
-      
-      const speed = distKm / timeHours;
-      
-      let max = mode === 'pedestrian' ? 8 : (mode === 'bicycle' ? 25 : 80);
-      let min = mode === 'pedestrian' ? 3 : (mode === 'bicycle' ? 10 : 15);
-      let ratio = (speed - min) / (max - min);
-      ratio = Math.max(0, Math.min(1, ratio));
-      
-      const hue = ratio * 120;
-      const color = `hsl(${hue}, 90%, 50%)`;
-      
-      const segment = L.polyline([
-        [c1[1], c1[0]], 
-        [c2[1], c2[0]]
-      ], {
-        color: color,
-        weight: 4,
-        opacity: 0.85,
-        className: 'heatmap-poly'
-      });
-      
-      isochroneGroup.addLayer(segment);
-    }
-  });
-}
 
 /**
  * Render standard isochrone polygons.
