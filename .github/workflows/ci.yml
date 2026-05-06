@@ -27,23 +27,29 @@ jobs:
         run: npm test
 
   deploy:
-    name: Deploy to Cloudflare Pages
+    name: Deploy to GitHub Pages
     needs: test
-    # Only deploy on push to main/master, not on pull requests
     if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      deployments: write
+      pages: write      # Required for GitHub Pages
+      id-token: write   # Required for GitHub Pages
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Publish to Cloudflare Pages
-        uses: cloudflare/pages-action@v1
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: geochron # Make sure this matches your project name in Cloudflare
-          directory: '.'
-          # Uncomment and configure if you build your project first buildCommand: npm run build
+          path: '.' # Upload the entire repository
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
