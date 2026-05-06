@@ -74,12 +74,12 @@ export function bindModeButtons(onChange) {
 export function updateLocationInfo(lat, lng, name, mode) {
   document.getElementById('locationInfo').style.display = 'block';
   const nameRow = name
-    ? `<div style="font-weight:600;font-size:13.5px;margin-bottom:4px;">📍 ${name}</div>`
+    ? `<div class="location-name">📍 ${name}</div>`
     : '';
   document.getElementById('locationDetails').innerHTML = `
     ${nameRow}
-    <div style="opacity:0.55;"><span class="coord">${lat.toFixed(4)}°N, ${lng.toFixed(4)}°E</span></div>
-    <div style="margin-top:4px;opacity:0.45;">Mode: ${getModeLabel(mode)}</div>
+    <div class="location-coords"><span class="coord">${lat.toFixed(4)}°N, ${lng.toFixed(4)}°E</span></div>
+    <div class="location-mode">Mode: ${getModeLabel(mode)}</div>
   `;
 }
 

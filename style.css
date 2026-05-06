@@ -234,6 +234,21 @@ a:hover { color: #00d4ff; }
   border-radius: 4px;
 }
 
+.location-name {
+  font-weight: 600;
+  font-size: 13.5px;
+  margin-bottom: 4px;
+}
+
+.location-coords {
+  opacity: 0.55;
+}
+
+.location-mode {
+  margin-top: 4px;
+  opacity: 0.45;
+}
+
 /* ── Panel Footer ────────────────────────────────────── */
 .panel-footer {
   margin-top: 24px;

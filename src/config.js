@@ -3,7 +3,6 @@
 export const BERLIN_CENTER = [52.52, 13.405];
 export const DEFAULT_ZOOM = 6;
 
-//export const VALHALLA_URL     = 'http://localhost:8002/isochrone';
 export const VALHALLA_URL = 'https://isochron.duckdns.org/isochrone';
 
 export const VALHALLA_TIMEOUT = 12_000; // ms

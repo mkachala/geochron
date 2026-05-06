@@ -18,7 +18,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const pos = getMarkerLatLng();
     if (pos) generateIsochrones(pos.lat, pos.lng);
   });
-  });
 });
 
 // ── Handlers ───────────────────────────────────────────────────

@@ -1,6 +1,6 @@
 // ── Map layer management ───────────────────────────────────────
 import { BERLIN_CENTER, DEFAULT_ZOOM, CUSTOM_TIME_COLORS } from './config.js';
-import { formatDuration, getModeLabel, calculateDistance } from './utils.js';
+import { formatDuration, getModeLabel } from './utils.js';
 
 /** @type {L.Map} */
 let map;
@@ -72,44 +72,32 @@ export function getMarkerLatLng() {
 /**
  * Render isochrone feature set as Leaflet polygons.
  * @param {Array<{time: number, geometry: GeoJSON.Geometry}>} features
- * @param {string} mode - Current transport mode (for tooltip label).
+ * @param {string}   mode         - Current transport mode (for tooltip label).
  * @param {number[]} currentTimes - Active contour values.
  */
 export function renderIsochrones(features, mode, currentTimes) {
   isochroneGroup.clearLayers();
 
-  const center = getMarkerLatLng();
-  if (!center) return;
+  if (!getMarkerLatLng()) return;
 
-  renderIsochronePolygons(features, mode, currentTimes);
-}
-
-
-/**
- * Render standard isochrone polygons.
- * @param {Array<{time: number, geometry: GeoJSON.Geometry}>} features
- * @param {string} mode 
- * @param {number[]} currentTimes 
- */
-function renderIsochronePolygons(features, mode, currentTimes) {
   const sorted = [...features].sort((a, b) => b.time - a.time);
 
   sorted.forEach((feat, idx) => {
     const timeIdx = currentTimes.indexOf(feat.time);
     if (timeIdx === -1) return;
-    
+
     const polyColor = CUSTOM_TIME_COLORS[timeIdx % CUSTOM_TIME_COLORS.length];
     const latlngs = feat.geometry.coordinates[0].map((c) => [c[1], c[0]]);
     const baseFillOpacity = 0.12 + (sorted.length - idx) * 0.015;
 
     const polygon = L.polygon(latlngs, {
-      color:       polyColor,
-      weight:      1.5,
-      opacity:     0.7,
-      fillColor:   polyColor,
-      fillOpacity: baseFillOpacity,
-      smoothFactor:1.5,
-      className:   'isochrone-poly',
+      color:        polyColor,
+      weight:       1.5,
+      opacity:      0.7,
+      fillColor:    polyColor,
+      fillOpacity:  baseFillOpacity,
+      smoothFactor: 1.5,
+      className:    'isochrone-poly',
     });
 
     polygon.bindTooltip(
