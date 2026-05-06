@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Geo App — Test Runner</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #07080f;
+      color: #e2e8f0;
+      min-height: 100vh;
+      padding: 40px 24px;
+    }
+
+    header {
+      margin-bottom: 36px;
+    }
+
+    header h1 {
+      font-size: 28px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #22d3ee, #818cf8);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    header p {
+      margin-top: 6px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.35);
+    }
+
+    #summary {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+    }
+
+    .stat {
+      padding: 14px 24px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 15px;
+      letter-spacing: 0.3px;
+    }
+
+    .stat.total  { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.6); }
+    .stat.pass   { background: rgba(52,211,153,0.12);  color: #34d399; }
+    .stat.fail   { background: rgba(248,113,113,0.12); color: #f87171; }
+
+    .suite {
+      margin-bottom: 24px;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .suite-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 18px;
+      background: rgba(255,255,255,0.03);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.55);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .suite-header:hover { background: rgba(255,255,255,0.06); }
+
+    .suite-badge {
+      font-size: 11px;
+      padding: 3px 9px;
+      border-radius: 20px;
+      font-weight: 700;
+    }
+
+    .suite-badge.all-pass { background: rgba(52,211,153,0.15); color: #34d399; }
+    .suite-badge.has-fail { background: rgba(248,113,113,0.15); color: #f87171; }
+
+    .suite-body { padding: 4px 0; }
+
+    .test-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 9px 18px;
+      font-size: 13px;
+      border-top: 1px solid rgba(255,255,255,0.03);
+    }
+
+    .test-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+    .test-name { flex: 1; color: rgba(255,255,255,0.7); }
+    .test-err  { font-size: 11.5px; color: #f87171; margin-top: 3px; font-family: monospace; }
+
+    .loading { color: rgba(255,255,255,0.4); font-size: 14px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🧪 Test Runner</h1>
+    <p>Geo App — unit tests for pure utility functions</p>
+  </header>
+
+  <div id="summary"><p class="loading">Running tests…</p></div>
+  <div id="results"></div>
+
+  <script type="module">
+    import { suites } from './src/app.test.js';
+
+    const summaryEl = document.getElementById('summary');
+    const resultsEl = document.getElementById('results');
+
+    let totalPass = 0, totalFail = 0;
+
+    summaryEl.innerHTML = '';
+
+    for (const suite of suites) {
+      totalPass += suite.passed;
+      totalFail += suite.failed;
+
+      const allPass = suite.failed === 0;
+
+      const suiteEl = document.createElement('div');
+      suiteEl.className = 'suite';
+
+      suiteEl.innerHTML = `
+        <div class="suite-header">
+          <span>${suite.suiteName}</span>
+          <span class="suite-badge ${allPass ? 'all-pass' : 'has-fail'}">
+            ${suite.passed}/${suite.passed + suite.failed} passed
+          </span>
+        </div>
+        <div class="suite-body">
+          ${suite.details.map((t) => `
+            <div class="test-row">
+              <span class="test-icon">${t.status === 'pass' ? '✅' : '❌'}</span>
+              <div>
+                <div class="test-name">${t.name}</div>
+                ${t.message ? `<div class="test-err">${t.message}</div>` : ''}
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+
+      resultsEl.appendChild(suiteEl);
+    }
+
+    // Summary bar
+    summaryEl.innerHTML = `
+      <div class="stat total">📋 ${totalPass + totalFail} tests</div>
+      <div class="stat pass">✅ ${totalPass} passed</div>
+      ${totalFail > 0 ? `<div class="stat fail">❌ ${totalFail} failed</div>` : ''}
+    `;
+  </script>
+</body>
+</html>

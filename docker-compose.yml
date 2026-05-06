@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  valhalla:
+    image: ghcr.io/gis-ops/docker-valhalla/valhalla:latest
+    container_name: valhalla
+    ports:
+      - "8002:8002"
+    volumes:
+      - ./custom_files:/custom_files
+    environment:
+      - serve_generate_valhalla_json=True
+      - server_threads=2
+      - build_elevation=False
+      - build_admins=False
+      - build_time_zones=False
+      # We download the Berlin extract to custom_files
+      - USE_LOCAL_FILES=True

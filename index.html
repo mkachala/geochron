@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>European Travel Times — Interactive Isochrone Map</title>
+  <meta name="description" content="Explore travel times across European cities with an interactive isochrone map. Visualize how far you can travel by car, bike, or on foot from any city.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div id="map"></div>
+
+  <!-- Control Panel -->
+  <div class="panel" id="panel">
+    <div class="panel-header">
+      <h1>European<br>Travel Times</h1>
+      <p class="subtitle">Click anywhere on the map to visualize reachable areas</p>
+    </div>
+
+    <div class="panel-section">
+      <label class="section-label">Transport Mode</label>
+      <div class="mode-selector" id="modeSelector">
+        <button class="mode-btn active" data-mode="auto" id="mode-auto">
+          <span class="mode-icon">🚗</span><span class="mode-name">Car</span>
+        </button>
+        <button class="mode-btn" data-mode="bicycle" id="mode-bicycle">
+          <span class="mode-icon">🚲</span><span class="mode-name">Bike</span>
+        </button>
+        <button class="mode-btn" data-mode="pedestrian" id="mode-pedestrian">
+          <span class="mode-icon">🚶</span><span class="mode-name">Walk</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="panel-section">
+      <label class="section-label">Travel Times (minutes)</label>
+      <div id="timeInputs" class="time-input-group"></div>
+    </div>
+
+    <div class="panel-section">
+      <label class="toggle-container">
+        <input type="checkbox" id="heatmapToggle">
+        <span class="toggle-slider"></span>
+        <span class="toggle-label">Distortion Heatmap</span>
+      </label>
+      <div id="heatmapLegend" class="heatmap-legend" style="display:none;">
+        <div class="heatmap-gradient"></div>
+        <div class="heatmap-labels">
+          <span>Slow</span>
+          <span>Fast</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-section" id="locationInfo" style="display:none;">
+      <label class="section-label">Selected Location</label>
+      <div id="locationDetails" class="location-details"></div>
+    </div>
+
+    <div class="panel-footer">
+      <p>Data © <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> · Routing by <a href="https://valhalla.github.io/valhalla/" target="_blank">Valhalla</a></p>
+    </div>
+  </div>
+
+  <!-- Loading Overlay -->
+  <div id="loading" class="loading-overlay">
+    <div class="loading-content">
+      <div class="loading-spinner"></div>
+      <p class="loading-text">Calculating travel times…</p>
+    </div>
+  </div>
+
+  <!-- Toast container -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script type="module" src="src/app.js"></script>
+</body>
+</html>

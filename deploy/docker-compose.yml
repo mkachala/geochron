@@ -1,0 +1,29 @@
+version: "3.8"
+
+services:
+  valhalla:
+    image: ghcr.io/gis-ops/docker-valhalla/valhalla:latest
+    container_name: valhalla
+    expose:
+      - "8002"
+    volumes:
+      - ./custom_files:/custom_files
+    environment:
+      - serve_generate_valhalla_json=True
+      - server_threads=2
+      - build_elevation=False
+      - build_admins=False
+      - build_time_zones=False
+      - USE_LOCAL_FILES=True
+
+  caddy:
+    image: caddy:2
+    container_name: caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      # Replace this with your DuckDNS domain!
+      - DOMAIN=isochron.duckdns.org
+    command: caddy reverse-proxy --from https://$${DOMAIN} --to http://valhalla:8002

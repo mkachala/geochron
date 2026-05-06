@@ -1,0 +1,12 @@
+{
+  "name": "geo-isochrone",
+  "version": "1.0.0",
+  "description": "European Travel Times Interactive Isochrone Map",
+  "main": "src/app.js",
+  "type": "module",
+  "scripts": {
+    "test": "node test-runner.js"
+  },
+  "author": "",
+  "license": "ISC"
+}
